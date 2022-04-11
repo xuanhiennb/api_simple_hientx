@@ -1,0 +1,22 @@
+{
+    "name": "API DOCUMENTATION",
+    "version": "1.0.0",
+    "description":" ",
+    "apidoc": {
+      "url": "http://127.0.0.1:5000",
+      "sampleUrl": "http://127.0.0.1:5000",
+      "header": {
+        "title": "Introduction",
+        "filename": "./docs/header.md"
+      },
+      "footer": {
+        "title": "Instructions",
+        "filename": "./docs/footer.md"
+      },
+    "template": {
+     "showRequiredLabels": true
+    }
+      
+    }
+  }
+
