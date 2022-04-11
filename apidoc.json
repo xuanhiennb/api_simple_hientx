@@ -13,6 +13,10 @@
         "title": "Instructions",
         "filename": "./docs/footer.md"
       },
+      "footer2": {
+        "title": "Testing",
+        "filename": "./docs/footer.md"
+      },
     "template": {
      "showRequiredLabels": true
     }
