@@ -7,8 +7,8 @@
 - Required data must meet the following conditions:
     - poolId: is a positive integer starting from 0
     - poolValues: is a 1-dimensional array of integers
-    - peecentile: is a numeric in the range 0-100
-- The data is organized by index. There is a file that stores the entire index for search, the data will be saved into different files based on poolId.
+    - peecentile: is a decimal number in the range from 0 to 100
+- To improve query performance and manageability, the data uses index partitioning. The index is placed on a separate filegroup from the base table, and it stores the index entries for a single data partition.
 
 
 # Processing functions
@@ -17,14 +17,14 @@
 |-------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | input       | dict                                                                                                                                     |
 | output      | boolean                                                                                                                                  |
-| description | Input data request from first POST endpoint. Check the input condition of the data. Returns True if the condition is met, False otherwise. |
+| description | Input data request from first POST endpoint. Check the input condition of the data. The function returns True if the condition is met, otherwise it returns FALSE. |
 
 ### validate_input2()
 | Name        | Description                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | input       | dict                                                                                                                                      |
 | output      | boolean                                                                                                                                   |
-| description | Input data request from second POST endpoint. Check the input condition of the data. Returns True if the condition is met, False otherwise. |
+| description | Input data request from second POST endpoint. Check the input condition of the data. The function returns True if the condition is met, otherwise it returns FALSE. |
 
 ### id_to_path()
 | Name        | Description                                                                    |
@@ -87,14 +87,14 @@
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | input       | json                                                                                                                                                                                                                                                                                                                                       |
 | output      | json                                                                                                                                                                                                                                                                                                                                       |
-| description | Handle requests from first POST endpoint. Use the validate_input() function to check the request data, if the condition is not met, return the message "invalid input". Check if poolId already exists. If poolId does not exist, create() will be used and return "inserted" message. If poolId already exists, use update() and return "appended" message. |
+| description | Handle requests from first POST endpoint. Use the validate_input() function to check the request data, if the condition is not met, return the message "invalid input". Check if poolId already exists. If this poolID is new, create() will be used and return "inserted" message. If poolId already exists, update() will be used and return "appended" message. |
 
 ### post2()
 | Name        | Description                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | input       | json                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | output      | json                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| description | Handle requests from second POST endpoint. Use the validate_input2() function to check the request data, if the condition is not met, return the message "invalid input". Check if poolId already exists. If poolId already exists, get_pool() function will be used to load the requested poolId data. Then use the calculate_quantile() function, which returns the calculated quantile and the total count of elements in the pool. IF poolId does not exist, return message "poolId not found" |
+| description | Handle requests from second POST endpoint. Use the validate_input2() function to check the request data, if the condition is not met, return the message "invalid input". Check if poolId already exists. If poolId already exists, get_pool() function will be used to load the requested poolId data. then calculate_quantile() is used to returns the calculated quantile and the total count of elements in the pool. If this poolID is new, return message "poolId not found" |
 
-# Upgrade plan
-When there is data to append, write the new data down without uploading the file to update. Will save as multiple records with the same key. When processing is needed, all records with the same key will be taken out for processing. This will reduce the time it takes to load data when you need to update new data. The downside is that it takes up more storage space.
+# Optimization Plan
+When there is data to append, write the new date to the database without uploading the file to update. Will save as multiple records with the same key. When processing is needed, all records with the same key will be taken out for processing. This will reduce the time it takes to load data when you need to update new data. The downside is that it takes up more storage space.
